@@ -1,5 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
+import vk_api
+import re
 
 
 def get_post_id(link):
@@ -14,9 +16,12 @@ def get_post_id(link):
     response = session.get(link, headers=headers)
 
     soup = BeautifulSoup(response.text, 'html.parser')
-    posts = soup.findAll('div', class_='_post')
+    posts = soup.findAll('div', class_='post--with-likes')
     post_data = [item['data-post-id'] for item in posts]
-    return post_data
+    data = list()
+    for item in post_data:
+        data.append(re.sub(r'-.*_', '', item))
+    return data
 
 
 if __name__ == "__main__":
@@ -24,4 +29,14 @@ if __name__ == "__main__":
     bot = get_post_id("https://vk.com/bot_maxim")
     print(tl)
     print(bot)
+    token = "100e8c2a347754f2303efa9742782f1450f333b72f3bdc322f492422adb911d34eb84d76b979933425189"
+    user = '+79092273227'
+    my_pass = ''
+    vk_session = vk_api.VkApi(user, my_pass)  # token=token
+    vk_session.auth()
+    vk = vk_session.get_api()
+    tl_comments = list()
+    for item in tl:
+        tl_comments.append(vk.wall.getComments(owner_id=-125004421, post_id=int(item), v=5.131))
+    print(tl_comments)
 

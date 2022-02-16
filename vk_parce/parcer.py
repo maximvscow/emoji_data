@@ -1,10 +1,11 @@
+import json
 import requests
 from bs4 import BeautifulSoup
 import vk_api
 import re
 
 
-def get_post_id(link):
+def get_post_ids(link):
     headers = {
         'cache-control': 'max-age=0',
         'upgrade-insecure-requests': '1',
@@ -14,29 +15,37 @@ def get_post_id(link):
     }
     session = requests.session()
     response = session.get(link, headers=headers)
-
     soup = BeautifulSoup(response.text, 'html.parser')
     posts = soup.findAll('div', class_='post--with-likes')
     post_data = [item['data-post-id'] for item in posts]
-    data = list()
+    ids = list()
     for item in post_data:
-        data.append(re.sub(r'-.*_', '', item))
-    return data
+        ids.append(re.sub(r'-.*_', '', item))
+    return ids
+
+
+def get_comments(link, post_ids):
+    sh_name = re.sub(r'https://vk.com/', '', link)
+    api_req = vk.groups.getById(group_id=sh_name, v=5.131)
+    req_json = json.dumps(api_req[0], ensure_ascii=False)
+    req_py = json.loads(req_json)
+    own_id = "".join(["-", str(req_py["id"])])
+    comments = list()
+    for item in post_ids:
+        comments.append(vk.wall.getComments(owner_id=int(own_id), post_id=int(item), v=5.131))
+    return comments
 
 
 if __name__ == "__main__":
-    tl = get_post_id("https://vk.com/true_lentach")
-    bot = get_post_id("https://vk.com/bot_maxim")
-    print(tl)
-    print(bot)
+    gr_urls = ["https://vk.com/true_lentach", "https://vk.com/bot_maxim"]
     token = "100e8c2a347754f2303efa9742782f1450f333b72f3bdc322f492422adb911d34eb84d76b979933425189"
     user = '+79092273227'
-    my_pass = ''
+    my_pass = 'ApiCheck13'
     vk_session = vk_api.VkApi(user, my_pass)  # token=token
     vk_session.auth()
     vk = vk_session.get_api()
-    tl_comments = list()
-    for item in tl:
-        tl_comments.append(vk.wall.getComments(owner_id=-125004421, post_id=int(item), v=5.131))
-    print(tl_comments)
-
+    all_comments = list()
+    for element in gr_urls:
+        data = get_post_ids(element)
+        all_comments.append(get_comments(element, data))
+    print(all_comments)

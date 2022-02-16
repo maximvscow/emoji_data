@@ -49,6 +49,4 @@ if __name__ == "__main__":
     for element in gr_urls:
         data = get_post_ids(element)
         all_comments.append(get_comments(element, data))
-    df = pd.DataFrame(all_comments)
-    df.to_csv("df1.csv")
     print(all_comments)

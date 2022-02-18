@@ -38,7 +38,8 @@ def get_comments(link, post_ids):
 
 
 if __name__ == "__main__":
-    gr_urls = ["https://vk.com/true_lentach", "https://vk.com/bot_maxim"]
+    gr_urls = ["https://vk.com/true_lentach", "https://vk.com/bot_maxim", "https://vk.com/public143177265",
+               "https://vk.com/dayvinchik", ]
     token = "100e8c2a347754f2303efa9742782f1450f333b72f3bdc322f492422adb911d34eb84d76b979933425189"
     user = '+79092273227'
     my_pass = 'ApiCheck13'
@@ -49,4 +50,5 @@ if __name__ == "__main__":
     for element in gr_urls:
         data = get_post_ids(element)
         all_comments.append(get_comments(element, data))
-    print(all_comments)
+    df = pd.DataFrame(all_comments)
+    df.to_csv("df2.csv")

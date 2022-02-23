@@ -39,12 +39,15 @@ def get_comments(link, post_ids):
 
 
 if __name__ == "__main__":
-    gr_urls = ["https://vk.com/true_lentach", "https://vk.com/bot_maxim", "https://vk.com/public143177265", "https://vk.com/dayvinchik" ]
+    gr_urls = ["https://vk.com/true_lentach", "https://vk.com/bot_maxim", "https://vk.com/rhymes",
+               "https://vk.com/dayvinchik", "https://vk.com/gulag.media", "https://vk.com/bad_novosti",
+               "https://vk.com/science_technology"]
     token = "100e8c2a347754f2303efa9742782f1450f333b72f3bdc322f492422adb911d34eb84d76b979933425189"
     user = '+79092273227'
     my_pass = 'ApiCheck13'
     vk_session = vk_api.VkApi(user, my_pass)  # token=token
     vk_session.auth()
+    count = 0
     vk = vk_session.get_api()
     d = defaultdict(list)
     d2 = defaultdict(list)
@@ -57,7 +60,8 @@ if __name__ == "__main__":
             post_comments_js = json.dumps(post, ensure_ascii=False)
             post_comments = json.loads(post_comments_js)
             for i in post_comments['items']:
-                d[i['from_id']].append(i['text'])
+                d[i['from_id']].append(i['text']) # TODO: Получать ветку для каждого комментария через thread_items_count
+                count = count + 1
     df = pd.DataFrame(list(d.items()), columns=['id', 'comment'])
-    print(df)
     df.to_csv("df3.csv")
+    print(count)

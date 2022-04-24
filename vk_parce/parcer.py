@@ -16,7 +16,7 @@ def get_owner_id(link):
 def get_posts(link):
     owner = get_owner_id(link)
     posts = list()
-    wall = vk.wall.get(owner_id=int(owner), count=25, v=5.131)
+    wall = vk.wall.get(owner_id=int(owner), count=1, v=5.131)
     for post in wall['items']:
         posts.append(post['id'])
     return posts
@@ -52,11 +52,9 @@ def get_replies(link, comments_id, post_id):
 
 if __name__ == "__main__":
     gr_urls = [r"https://vk.com/true_lentach", r"https://vk.com/bad_novosti"]
-    token = "100e8c2a347754f2303efa9742782f1450f333b72f3bdc322f492422adb911d34eb84d76b979933425189"
-    user = '+79092273227'
-    my_pass = 'ApiCheck13'
-    vk_session = vk_api.VkApi(user, my_pass)  # token=token
-    vk_session.auth()
+    token = "ca62f3d9ca62f3d9ca62f3d9c7ca1ea088cca62ca62f3d9a8077c79d0ec187ff848d27c"
+    vk_session = vk_api.VkApi()
+    vk_session.token = {'access_token': token, 'expires_in': 0}
     vk = vk_session.get_api()
     comments_series = pd.Series(object)
     for url in gr_urls:

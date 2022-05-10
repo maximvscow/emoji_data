@@ -73,27 +73,42 @@ if __name__ == "__main__":
     vk_session = vk_api.VkApi()
     vk_session.token = {'access_token': token, 'expires_in': 0}
     vk = vk_session.get_api()
-    print('**Парсер сообществ социальной сети ВКонтакте (VK) \n')
+    flag = True
+    print('\n')
+    print('**Парсер записей и комментариев к ним со стены сообществ социальной сети ВКонтакте (VK) \n')
+    print('  ____     _____     _____     _   _     _____')
+    print(' /  __\\   |_   _|   |  _  |   | | | |   /  _  \\')
+    print(' | |        | |     | |_| |   | |_| |   | |_| |')
+    print(' | |        | |     |  ___|   |  _  |   |  _  |')
+    print(' | |___     | |     | |___    | | | |   | | | |')
+    print(' \\____/     |_|     |_____|   |_| |_|   |_| |_|   v 1.0')
+    print('')
+    print('©Академия ФСО России \n')
     print('Сообщества, из которых собираются данные:')
     for url in gr_urls:
         print(url)
-    check = input("Вам необходимо добавить новое сообщество? (да/нет): ")
-    try:
+    print('\n')
+    while flag:
+        check = input("Вам необходимо добавить новое сообщество? (да/нет): ")
         if check == "да":
             new_url = input("Введите ссылку на сообщество: ")
             gr_urls.append(new_url)
-    except Exception as e:
-        
-
-
+            print('\n Новый список сообществ:')
+            for url in gr_urls:
+                print(url)
+            print('')
+        elif check == "нет":
+            flag = False
+        else:
+            print('Некорректный ответ! Попробуйте снова!')
     date = input("Введите дату, за которую необходимо собрать сообщения со стены,"
                  " в формате %d/%m/%Y (например 01/01/2022): ")
     date_begin = int(datetime.datetime.strptime(date, "%d/%m/%Y").timestamp())
     for url in gr_urls:
         all_posts = get_posts(url, date_begin)
         full_posts_data = get_comments(url, all_posts)
-        for post in full_posts_data:
-            post = json.dumps(post)
-            json_post = json.loads(post)
+        for post_full in full_posts_data:
+            post_full = json.dumps(post_full)
+            json_post = json.loads(post_full)
             print(json_post)
 
